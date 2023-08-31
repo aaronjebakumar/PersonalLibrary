@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Library</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #6e566e;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Personal Library</h1>
+    <button onclick="addBookInteractive()">Add a Book</button>
+    <ul id="bookList"></ul>
+</div>
+<script>
+    function Book(title, author, yearPublished, readStatus) {
+        this.title = title;
+        this.author = author;
+        this.yearPublished = yearPublished;
+        this.readStatus = readStatus;
+    }
+
+    Book.prototype.getSummary = function() {
+        return `${this.title} by ${this.author}, published in ${this.yearPublished}. Read: ${this.readStatus ? 'Yes' : 'No'}`;
+    }
+
+    const library = [];
+
+    function addBook(book) {
+        library.push(book);
+        displayBooks();
+    }
+
+    function removeBookByTitle(title) {
+        const index = library.findIndex(book => book.title === title);
+        if (index !== -1) {
+            library.splice(index, 1);
+            displayBooks();
+        }
+    }
+
+    function displayBooks() {
+        const bookList = document.getElementById("bookList");
+        bookList.innerHTML = "";
+
+        library.forEach(book => {
+            const li = document.createElement("li");
+            const summary = document.createElement("p");
+            const removeButton = document.createElement("button");
+            
+            summary.textContent = book.getSummary();
+            removeButton.textContent = "Remove";
+            removeButton.onclick = () => removeBookByTitle(book.title);
+
+            li.appendChild(summary);
+            li.appendChild(removeButton);
+
+            bookList.appendChild(li);
+        });
+    }
+
+    function addBookInteractive() {
+        const title = prompt("Enter the title of the book:");
+        const author = prompt("Enter the author of the book:");
+        const yearPublished = prompt("Enter the year of publication:");
+        const readStatus = confirm("Have you read this book?");
+        
+        const newBook = new Book(title, author, yearPublished, readStatus);
+        addBook(newBook);
+    }
+    displayBooks();
+</script>
+</body>
+</html>
